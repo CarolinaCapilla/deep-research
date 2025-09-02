@@ -144,7 +144,7 @@ export DEBUG=1
 
 ## 🔄 Future Enhancements
 
-- [ ] Add support for multiple AI providers (Anthropic, Google)
+- [ ] Add support for additional AI models within OpenAI ecosystem
 - [ ] Implement research result caching
 - [ ] Add export options (PDF, DOCX)
 - [ ] Create a REST API endpoint
