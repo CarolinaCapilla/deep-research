@@ -1,3 +1,15 @@
+---
+title: Deep Research Agent
+emoji: 🔎
+colorFrom: indigo
+colorTo: green
+sdk: gradio
+sdk_version: "5.47.2"
+app_file: agents/deep_research.py
+python_version: "3.11"
+pinned: false
+---
+
 # Deep Research AI Agent
 
 An intelligent research assistant powered by AI agents that performs comprehensive web research, generates reports, and sends email summaries. Built with Gradio for an intuitive web interface.
@@ -85,12 +97,14 @@ asyncio.run(main())
 deep-research/
 ├── agents/
 │   ├── __init__.py
+├── agents/
+│   ├── __init__.py
 │   ├── deep_research.py      # Main Gradio app
-│   ├── research_manager.py   # Orchestrates research pipeline
+│   ├── research_manager.py   # Orchestrates research pipeline (email optional)
 │   ├── planner_agent.py      # Plans research queries
 │   ├── search_agent.py       # Performs web searches
 │   ├── writer_agent.py       # Generates reports
-│   └── email_agent.py        # Sends email summaries
+│   └── email_agent.py        # Sends email summaries(optional)
 ├── pyproject.toml           # Project dependencies
 ├── .gitignore              # Git ignore rules
 └── README.md               # This file
@@ -144,11 +158,8 @@ export DEBUG=1
 
 ## 🔄 Future Enhancements
 
-- [ ] Add support for additional AI models within OpenAI ecosystem
 - [ ] Implement research result caching
 - [ ] Add export options (PDF, DOCX)
-- [ ] Create a REST API endpoint
-- [ ] Add user authentication
 - [ ] Implement research history and favorites
 
 ## 📞 Support

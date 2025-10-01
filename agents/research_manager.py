@@ -4,6 +4,7 @@ from planner_agent import planner_agent, WebSearchItem, WebSearchPlan
 from writer_agent import writer_agent, ReportData
 from email_agent import email_agent
 import asyncio
+import os
 
 class ResearchManager:
 
@@ -17,9 +18,12 @@ class ResearchManager:
             search_results = await self.perform_searches(search_plan)
             yield "Searches complete, writing report..."
             report = await self.write_report(query, search_results)
-            yield "Report written, sending email..."
-            await self.send_email(report)
-            yield "Email sent, research complete"
+            if os.environ.get("SENDGRID_API_KEY"):
+                yield "Report written, sending email..."
+                await self.send_email(report)
+                yield "Email sent, research complete"
+            else:
+                yield "Report written. Skipping email (SENDGRID_API_KEY not set)."
             yield report.markdown_report
 
 
