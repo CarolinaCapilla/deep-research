@@ -5,7 +5,7 @@ colorFrom: indigo
 colorTo: green
 sdk: gradio
 sdk_version: "5.47.2"
-app_file: agents/deep_research.py
+app_file: app.py
 python_version: "3.11"
 pinned: false
 ---

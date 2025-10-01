@@ -11,15 +11,23 @@ async def run(query: str):
         yield chunk
 
 
-with gr.Blocks(theme=Default(primary_hue="sky")) as ui:
-    gr.Markdown("# Deep Research")
-    query_textbox = gr.Textbox(label="What topic would you like to research?")
-    run_button = gr.Button("Run", variant="primary")
-    report = gr.Markdown(label="Report")
+def build_ui() -> gr.Blocks:
+    with gr.Blocks(theme=Default(primary_hue="sky")) as demo:
+        gr.Markdown("# Deep Research")
+        query_textbox = gr.Textbox(label="What topic would you like to research?")
+        run_button = gr.Button("Run", variant="primary")
+        report = gr.Markdown(label="Report")
 
-    run_button.click(fn=run, inputs=query_textbox, outputs=report)
-    query_textbox.submit(fn=run, inputs=query_textbox, outputs=report)
+        run_button.click(fn=run, inputs=query_textbox, outputs=report)
+        query_textbox.submit(fn=run, inputs=query_textbox, outputs=report)
+    return demo
 
-ui.launch(inbrowser=True)
+
+# Expose a top-level Gradio app object for Spaces
+demo = build_ui()
+
+
+if __name__ == "__main__":
+    demo.launch()
 
 
