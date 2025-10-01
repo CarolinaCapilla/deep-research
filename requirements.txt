@@ -4,6 +4,13 @@ requests>=2.32.3
 pydantic>=2.9.2
 wikipedia>=1.4.0
 openai>=1.68.2
-anthropic>=0.49.0
-openai-agents>=0.0.15
+openai-agents==0.3.3
+openai==1.109.1
+openapi-core==0.19.5
+    # via semantic-kernel
+openapi-schema-validator==0.6.3
+    # via
+    #   openapi-core
+    #   openapi-spec-validator
+openapi-spec-validator==0.7.2
 
