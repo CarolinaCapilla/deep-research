@@ -7,8 +7,25 @@ load_dotenv(override=True)
 
 
 async def run(query: str):
-    async for chunk in ResearchManager().run(query):
-        yield chunk
+    """Stream status updates and final report.
+
+    Returns a tuple (status_log, report_markdown) progressively.
+    """
+    status_lines: list[str] = []
+    report_md: str = ""
+    async for event in ResearchManager().run(query):
+        if isinstance(event, dict):
+            et = event.get("type")
+            if et == "status":
+                status_lines.append(str(event.get("text", "")))
+            elif et == "error":
+                status_lines.append(f"ERROR: {event.get('text', '')}")
+            elif et == "report":
+                report_md = str(event.get("markdown", ""))
+        else:
+            # Backward compat if any string yields remain
+            status_lines.append(str(event))
+        yield "\n".join(status_lines), report_md
 
 
 def build_ui() -> gr.Blocks:
@@ -16,10 +33,12 @@ def build_ui() -> gr.Blocks:
         gr.Markdown("# Deep Research")
         query_textbox = gr.Textbox(label="What topic would you like to research?")
         run_button = gr.Button("Run", variant="primary")
-        report = gr.Markdown(label="Report")
+        with gr.Row():
+            status = gr.Textbox(label="Status", lines=10)
+            report = gr.Markdown(label="Report")
 
-        run_button.click(fn=run, inputs=query_textbox, outputs=report)
-        query_textbox.submit(fn=run, inputs=query_textbox, outputs=report)
+        run_button.click(fn=run, inputs=query_textbox, outputs=[status, report])
+        query_textbox.submit(fn=run, inputs=query_textbox, outputs=[status, report])
     return demo
 
 

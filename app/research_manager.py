@@ -10,22 +10,37 @@ import os
 class ResearchManager:
 
     async def run(self, query: str):
-        """ Run the deep research process, yielding the status updates and the final report"""
+        """Run the deep research process, yielding structured events.
+
+        Events are dicts with a 'type' key:
+        - {"type": "status", "text": str}
+        - {"type": "error", "text": str}
+        - {"type": "report", "markdown": str}
+        """
         trace_id = gen_trace_id()
-        with trace("Research trace", trace_id=trace_id):
-            print("Starting research...")
-            search_plan = await self.plan_searches(query)
-            yield "Searches planned, starting to search..."
-            search_results = await self.perform_searches(search_plan)
-            yield "Searches complete, writing report..."
-            report = await self.write_report(query, search_results)
-            if os.environ.get("SENDGRID_API_KEY"):
-                yield "Report written, sending email..."
-                await self.send_email(report)
-                yield "Email sent, research complete"
-            else:
-                yield "Report written. Skipping email (SENDGRID_API_KEY not set)."
-            yield report.markdown_report
+        yield {"type": "status", "text": f"Trace: {trace_id}"}
+        try:
+            with trace("Research trace", trace_id=trace_id):
+                print("Starting research...")
+                yield {"type": "status", "text": "Planning searches..."}
+                search_plan = await self.plan_searches(query)
+
+                yield {"type": "status", "text": "Searches planned, starting to search..."}
+                search_results = await self.perform_searches(search_plan)
+
+                yield {"type": "status", "text": "Searches complete, writing report..."}
+                report = await self.write_report(query, search_results)
+
+                if os.environ.get("SENDGRID_API_KEY"):
+                    yield {"type": "status", "text": "Report written, sending email..."}
+                    await self.send_email(report)
+                    yield {"type": "status", "text": "Email sent, research complete"}
+                else:
+                    yield {"type": "status", "text": "Report written. Skipping email (SENDGRID_API_KEY not set)."}
+
+                yield {"type": "report", "markdown": report.markdown_report}
+        except Exception as e:
+            yield {"type": "error", "text": f"Unexpected error: {e}"}
 
     async def plan_searches(self, query: str) -> WebSearchPlan:
         """ Plan the searches to perform for the query """
