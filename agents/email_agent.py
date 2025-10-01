@@ -1,7 +1,7 @@
 import os
 from typing import Dict
 
-from agents import Agent, function_tool
+from openai_agents import Agent, function_tool
 
 @function_tool
 def send_email(subject: str, html_body: str) -> Dict[str, str]:

@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from agents import Agent
+from openai_agents import Agent
 
 HOW_MANY_SEARCHES = 5
 
