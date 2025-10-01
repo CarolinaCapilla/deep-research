@@ -1,4 +1,4 @@
-from openai_agents import Agent, WebSearchTool, ModelSettings
+from agents import Agent, WebSearchTool, ModelSettings
 
 INSTRUCTIONS = (
     "You are a research assistant. Given a search term, you search the web for that term and "

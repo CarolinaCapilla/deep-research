@@ -1,7 +1,8 @@
 import os
 from typing import Dict
 
-from openai_agents import Agent, function_tool
+from agents import Agent, function_tool
+
 
 @function_tool
 def send_email(subject: str, html_body: str) -> Dict[str, str]:
@@ -24,6 +25,7 @@ def send_email(subject: str, html_body: str) -> Dict[str, str]:
     response = sg.send(mail)
     return {"status": "success", "code": str(response.status_code)}
 
+
 INSTRUCTIONS = """You are able to send a nicely formatted HTML email based on a detailed report.
 You will be provided with a detailed report. You should use your tool to send one email, providing the 
 report converted into clean, well presented HTML with an appropriate subject line."""
@@ -34,3 +36,5 @@ email_agent = Agent(
     tools=[send_email],
     model="gpt-4o-mini",
 )
+
+

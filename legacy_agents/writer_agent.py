@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from openai_agents import Agent
+from agents import Agent
 
 INSTRUCTIONS = (
     "You are a senior researcher tasked with writing a cohesive report for a research query. "

@@ -69,6 +69,8 @@ The system consists of several specialized AI agents:
 
 ```bash
 python agents/deep_research.py
+# or
+python app/deep_research.py
 ```
 
 This will launch a Gradio web interface where you can:
