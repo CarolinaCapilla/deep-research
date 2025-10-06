@@ -1,3 +1,15 @@
+---
+title: Deep Research Agent
+emoji: 🔎
+colorFrom: indigo
+colorTo: green
+sdk: gradio
+sdk_version: "5.47.2"
+app_file: app.py
+python_version: "3.11"
+pinned: false
+---
+
 # Deep Research AI Agent
 
 An intelligent research assistant powered by AI agents that performs comprehensive web research, generates reports, and sends email summaries. Built with Gradio for an intuitive web interface.
@@ -174,7 +186,7 @@ TO_EMAIL=research@yourcompany.com
 4. Push to the branch: `git push origin feature/amazing-feature`
 5. Open a Pull Request
 
-##  Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -208,21 +220,3 @@ If you encounter any issues or have questions:
 ---
 
 **Made with ❤️ using AI agents and Gradio**
-
----
-
-## Hugging Face Spaces metadata
-
-The following metadata is provided for convenience when deploying to Spaces.
-
-```yaml
-title: Deep Research Agent
-emoji: "🔎"
-colorFrom: indigo
-colorTo: green
-sdk: gradio
-sdk_version: "5.47.2"
-app_file: app.py
-python_version: "3.11"
-pinned: false
-```
