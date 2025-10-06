@@ -34,7 +34,10 @@ class ResearchManager:
                 yield {"type": "status", "text": "Searches complete, writing report..."}
                 report = await self.write_report(query, search_results)
 
-                if os.environ.get("SENDGRID_API_KEY"):
+                email_configured = bool(
+                    os.environ.get("SENDGRID_API_KEY") or os.environ.get("SMTP_SERVER")
+                )
+                if email_configured:
                     yield {"type": "status", "text": "Report written, sending email..."}
                     send_result = await self.send_email(report)
                     # Surface tool outcome for visibility
@@ -66,7 +69,11 @@ class ResearchManager:
                 else:
                     yield {
                         "type": "status",
-                        "text": "Report written. Skipping email (SENDGRID_API_KEY not set).",
+                        "text": (
+                            "Report written. Email sending is disabled in this deployment for security "
+                            "(no email provider configured). To enable locally, set SENDGRID_API_KEY or "
+                            "SMTP_SERVER in your .env."
+                        ),
                     }
 
                 yield {"type": "report", "markdown": report.markdown_report}

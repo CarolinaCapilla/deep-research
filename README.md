@@ -171,12 +171,68 @@ Each agent can be configured in its respective file:
 
 ### Email Configuration
 
-Update email settings in your `.env` file:
+You can deliver email in two ways: SendGrid (recommended for production) or SMTP (great for local testing with MailHog/Mailtrap).
+
+#### Option A — SendGrid (production)
+
+1. Create a SendGrid account and verify a sender (single sender or domain).
+2. Add the following to your `.env` (or HF Spaces Secrets):
 
 ```env
-FROM_EMAIL=noreply@yourdomain.com
-TO_EMAIL=research@yourcompany.com
+SENDGRID_API_KEY=your_sendgrid_api_key
+FROM_EMAIL=verified_sender@example.com
+TO_EMAIL=recipient@example.com
 ```
+
+Notes:
+- FROM_EMAIL must be verified in your SendGrid account.
+- If `SENDGRID_API_KEY` is set, the app uses SendGrid automatically.
+
+#### Option B — SMTP (MailHog/Mailtrap)
+
+If `SENDGRID_API_KEY` is not set but `SMTP_SERVER` is set, the app sends via SMTP.
+
+- Local testing with Docker Compose + MailHog:
+   ```env
+   SMTP_SERVER=mailhog
+   SMTP_PORT=1025
+   SMTP_STARTTLS=0
+   FROM_EMAIL=test@example.com
+   TO_EMAIL=someone@example.com
+   ```
+   - Start with `docker compose up --build`
+   - View emails: http://localhost:8025
+
+- Local app (venv) + MailHog running on your Mac:
+   ```env
+   SMTP_SERVER=127.0.0.1
+   SMTP_PORT=1025
+   SMTP_STARTTLS=0
+   FROM_EMAIL=test@example.com
+   TO_EMAIL=someone@example.com
+   ```
+
+- App in Docker container, MailHog on your host (macOS):
+   ```env
+   SMTP_SERVER=host.docker.internal
+   SMTP_PORT=1025
+   SMTP_STARTTLS=0
+   FROM_EMAIL=test@example.com
+   TO_EMAIL=someone@example.com
+   ```
+
+- Mailtrap (cloud inbox via SMTP):
+   ```env
+   SMTP_SERVER=smtp.mailtrap.io
+   SMTP_PORT=2525
+   SMTP_USERNAME=your_mailtrap_user
+   SMTP_PASSWORD=your_mailtrap_pass
+   SMTP_STARTTLS=1
+   FROM_EMAIL=anything@example.com
+   TO_EMAIL=your_inbox@in.mailtrap.io
+   ```
+
+The app will display status messages like “Email sent (code: …)” or a clear skip/error reason.
 
 ## 🤝 Contributing
 
