@@ -33,9 +33,10 @@ def build_ui() -> gr.Blocks:
         gr.Markdown("# Deep Research")
         query_textbox = gr.Textbox(label="What topic would you like to research?")
         run_button = gr.Button("Run", variant="primary")
-        with gr.Row():
-            status = gr.Textbox(label="Status", lines=10)
-            report = gr.Markdown(label="Report")
+
+        # Smaller status box stacked above the final report
+        status = gr.Textbox(label="Status", lines=6)
+        report = gr.Markdown(label="Report")
 
         run_button.click(fn=run, inputs=query_textbox, outputs=[status, report])
         query_textbox.submit(fn=run, inputs=query_textbox, outputs=[status, report])
@@ -48,5 +49,3 @@ demo = build_ui()
 
 if __name__ == "__main__":
     demo.launch()
-
-
