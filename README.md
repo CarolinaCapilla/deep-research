@@ -1,18 +1,48 @@
----
-title: Deep Research Agent
-emoji: 🔎
-colorFrom: indigo
-colorTo: green
-sdk: gradio
-sdk_version: "5.47.2"
-app_file: app.py
-python_version: "3.11"
-pinned: false
----
-
 # Deep Research AI Agent
 
 An intelligent research assistant powered by AI agents that performs comprehensive web research, generates reports, and sends email summaries. Built with Gradio for an intuitive web interface.
+
+## ⚡ Quickstart
+
+Run with Docker (recommended):
+
+1. Copy env template and set your key(s)
+
+```bash
+cp .env.example .env
+# edit .env and set OPENAI_API_KEY (required). Optionally set SENDGRID_API_KEY, FROM_EMAIL, TO_EMAIL.
+```
+
+2. Start the app
+
+```bash
+# using docker compose (auto-loads .env)
+docker compose up --build
+
+# or plain Docker
+docker build -t deep-research .
+docker run --rm -p 7860:7860 --env-file .env deep-research
+```
+
+3. Open the UI
+   http://localhost:7860
+
+Run locally (without Docker):
+
+```bash
+# optional but recommended
+python -m venv .venv && source .venv/bin/activate
+
+# install deps
+pip install -r requirements.txt
+
+# env vars
+cp .env.example .env
+# edit .env and set OPENAI_API_KEY (required)
+
+# run
+python app.py
+```
 
 ## 🚀 Features
 
@@ -42,12 +72,14 @@ The system consists of several specialized AI agents:
 ## 🛠️ Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/CarolinaCapilla/deep-research.git
    cd deep-research
    ```
 
 2. **Install dependencies**
+
    ```bash
    pip install -r requirements.txt
    # or if using uv
@@ -68,12 +100,11 @@ The system consists of several specialized AI agents:
 ### Running the Web App
 
 ```bash
-python agents/deep_research.py
-# or
-python app/deep_research.py
+python app.py
 ```
 
 This will launch a Gradio web interface where you can:
+
 1. Enter your research query
 2. Click "Run" to start the research process
 3. View real-time progress updates
@@ -97,19 +128,23 @@ asyncio.run(main())
 
 ```
 deep-research/
-├── agents/
+├── app/
 │   ├── __init__.py
-├── agents/
-│   ├── __init__.py
-│   ├── deep_research.py      # Main Gradio app
+│   ├── deep_research.py      # Gradio UI (loads .env)
 │   ├── research_manager.py   # Orchestrates research pipeline (email optional)
 │   ├── planner_agent.py      # Plans research queries
 │   ├── search_agent.py       # Performs web searches
 │   ├── writer_agent.py       # Generates reports
-│   └── email_agent.py        # Sends email summaries(optional)
-├── pyproject.toml           # Project dependencies
-├── .gitignore              # Git ignore rules
-└── README.md               # This file
+│   └── email_agent.py        # Sends email summaries (optional)
+├── archive/
+│   └── legacy_agents/        # Archived older implementation
+├── app.py                    # Entrypoint that serves Gradio on 0.0.0.0:$PORT
+├── Dockerfile
+├── docker-compose.yml
+├── .env.example
+├── requirements.txt
+├── pyproject.toml
+└── README.md
 ```
 
 ## 🔧 Configuration
@@ -125,6 +160,7 @@ Each agent can be configured in its respective file:
 ### Email Configuration
 
 Update email settings in your `.env` file:
+
 ```env
 FROM_EMAIL=noreply@yourdomain.com
 TO_EMAIL=research@yourcompany.com
@@ -138,11 +174,7 @@ TO_EMAIL=research@yourcompany.com
 4. Push to the branch: `git push origin feature/amazing-feature`
 5. Open a Pull Request
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🐛 Troubleshooting
+##  Troubleshooting
 
 ### Common Issues
 
@@ -154,6 +186,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ### Debug Mode
 
 Enable debug logging by setting the environment variable:
+
 ```bash
 export DEBUG=1
 ```
@@ -175,3 +208,21 @@ If you encounter any issues or have questions:
 ---
 
 **Made with ❤️ using AI agents and Gradio**
+
+---
+
+## Hugging Face Spaces metadata
+
+The following metadata is provided for convenience when deploying to Spaces.
+
+```yaml
+title: Deep Research Agent
+emoji: "🔎"
+colorFrom: indigo
+colorTo: green
+sdk: gradio
+sdk_version: "5.47.2"
+app_file: app.py
+python_version: "3.11"
+pinned: false
+```

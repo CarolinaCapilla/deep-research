@@ -13,3 +13,6 @@ openapi-schema-validator==0.6.3
     #   openapi-spec-validator
 openapi-spec-validator==0.7.2
 
+# Email delivery
+sendgrid>=6.11.0
+

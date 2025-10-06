@@ -25,7 +25,10 @@ class ResearchManager:
                 yield {"type": "status", "text": "Planning searches..."}
                 search_plan = await self.plan_searches(query)
 
-                yield {"type": "status", "text": "Searches planned, starting to search..."}
+                yield {
+                    "type": "status",
+                    "text": "Searches planned, starting to search...",
+                }
                 search_results = await self.perform_searches(search_plan)
 
                 yield {"type": "status", "text": "Searches complete, writing report..."}
@@ -33,17 +36,45 @@ class ResearchManager:
 
                 if os.environ.get("SENDGRID_API_KEY"):
                     yield {"type": "status", "text": "Report written, sending email..."}
-                    await self.send_email(report)
-                    yield {"type": "status", "text": "Email sent, research complete"}
+                    send_result = await self.send_email(report)
+                    # Surface tool outcome for visibility
+                    if isinstance(send_result, dict):
+                        status = send_result.get("status")
+                        code_or_reason = send_result.get("code") or send_result.get(
+                            "reason"
+                        )
+                        if status == "success":
+                            yield {
+                                "type": "status",
+                                "text": f"Email sent (code: {code_or_reason})",
+                            }
+                        elif status == "skipped":
+                            yield {
+                                "type": "status",
+                                "text": f"Email skipped: {code_or_reason}",
+                            }
+                        else:
+                            yield {
+                                "type": "status",
+                                "text": f"Email status: {status} ({code_or_reason})",
+                            }
+                    else:
+                        yield {
+                            "type": "status",
+                            "text": f"Email tool returned: {send_result}",
+                        }
                 else:
-                    yield {"type": "status", "text": "Report written. Skipping email (SENDGRID_API_KEY not set)."}
+                    yield {
+                        "type": "status",
+                        "text": "Report written. Skipping email (SENDGRID_API_KEY not set).",
+                    }
 
                 yield {"type": "report", "markdown": report.markdown_report}
         except Exception as e:
             yield {"type": "error", "text": f"Unexpected error: {e}"}
 
     async def plan_searches(self, query: str) -> WebSearchPlan:
-        """ Plan the searches to perform for the query """
+        """Plan the searches to perform for the query"""
         print("Planning searches...")
         result = await Runner.run(
             planner_agent,
@@ -53,10 +84,12 @@ class ResearchManager:
         return result.final_output_as(WebSearchPlan)
 
     async def perform_searches(self, search_plan: WebSearchPlan) -> list[str]:
-        """ Perform the searches to perform for the query """
+        """Perform the searches to perform for the query"""
         print("Searching...")
         num_completed = 0
-        tasks = [asyncio.create_task(self.search(item)) for item in search_plan.searches]
+        tasks = [
+            asyncio.create_task(self.search(item)) for item in search_plan.searches
+        ]
         results = []
         for task in asyncio.as_completed(tasks):
             result = await task
@@ -68,7 +101,7 @@ class ResearchManager:
         return results
 
     async def search(self, item: WebSearchItem) -> str | None:
-        """ Perform a search for the query """
+        """Perform a search for the query"""
         input = f"Search term: {item.query}\nReason for searching: {item.reason}"
         try:
             result = await Runner.run(
@@ -80,7 +113,7 @@ class ResearchManager:
             return None
 
     async def write_report(self, query: str, search_results: list[str]) -> ReportData:
-        """ Write the report for the query """
+        """Write the report for the query"""
         print("Thinking about report...")
         input = f"Original query: {query}\nSummarized search results: {search_results}"
         result = await Runner.run(
@@ -97,7 +130,10 @@ class ResearchManager:
             email_agent,
             report.markdown_report,
         )
-        print("Email sent")
-        return result.final_output
-
-
+        # Log final tool output for debugging (success/skip/error details)
+        try:
+            out = result.final_output
+        except Exception:
+            out = None
+        print(f"send_email result: {out}")
+        return out

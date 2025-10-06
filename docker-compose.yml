@@ -1,0 +1,13 @@
+services:
+  deep-research:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: deep-research:latest
+    env_file:
+      - .env
+    environment:
+      - PORT=${PORT:-7860}
+    ports:
+      - "${PORT:-7860}:${PORT:-7860}"
+    restart: unless-stopped

@@ -1,0 +1,13 @@
+# Exclude local/dev files from Docker context
+.venv
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.log
+*.swp
+.DS_Store
+.git
+.gitignore
+.env
+archive/
