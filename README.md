@@ -39,6 +39,18 @@ docker run --rm -p 7860:7860 --env-file .env deep-research
 3. Open the UI
    http://localhost:7860
 
+Try these queries:
+
+- What are the key differences between GPT-4.1, GPT-4o, and Claude 3.7 Sonnet for research tasks?
+- Summarize the latest developments in small language models (SLMs) and how they compare to LLMs in 2025.
+- What are the best practices for Retrieval-Augmented Generation (RAG) vs fine-tuning for domain-specific QA?
+- What happened in the [YOUR TOPIC] space over the last 12 months? Provide sources and links.
+- Compare leading vector databases for production RAG (performance, cost, ecosystem) with references.
+
+Note about how this agent works:
+- This agent doesn’t “know” about itself or your environment. It plans web searches, gathers information from the web, and writes a report from found sources.
+- It won’t answer personal questions about the app or the user. Ask topic-oriented questions that can be researched online.
+
 Run locally (without Docker):
 
 ```bash
