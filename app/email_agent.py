@@ -6,16 +6,8 @@ from email.mime.text import MIMEText
 from agents import Agent, function_tool
 
 
-@function_tool
-def send_email(subject: str, html_body: str) -> Dict[str, str]:
-    """
-    Send an email with the given subject and HTML body.
-
-    Priority:
-    1) SendGrid if SENDGRID_API_KEY is set
-    2) SMTP if SMTP_SERVER is set (works with MailHog/Mailtrap or real SMTP)
-    Otherwise: skip.
-    """
+def _send_email_impl(subject: str, html_body: str) -> Dict[str, str]:
+    """Pure implementation used by tests and the tool wrapper."""
     from_email = os.environ.get("FROM_EMAIL", "noreply@example.com")
     to_email = os.environ.get("TO_EMAIL", "recipient@example.com")
 
@@ -84,6 +76,14 @@ def send_email(subject: str, html_body: str) -> Dict[str, str]:
         "status": "skipped",
         "reason": "No SENDGRID_API_KEY or SMTP_SERVER configured",
     }
+
+
+@function_tool
+def send_email(subject: str, html_body: str) -> Dict[str, str]:
+    """
+    Tool entrypoint. Delegates to the pure implementation for testability.
+    """
+    return _send_email_impl(subject, html_body)
 
 
 INSTRUCTIONS = """You are able to send a nicely formatted HTML email based on a detailed report.

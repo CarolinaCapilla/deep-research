@@ -16,3 +16,6 @@ openapi-spec-validator==0.7.2
 # Email delivery
 sendgrid>=6.11.0
 
+# Testing
+pytest>=8.0.0
+
