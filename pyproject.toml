@@ -45,4 +45,25 @@ dev = [
     "ipykernel>=6.29.5",
     "pytest>=8.0.0",
     "pytest-asyncio>=0.23.0",
+    "ruff>=0.6.9",
 ]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+exclude = [
+    "archive/**",
+]
+
+[tool.ruff.lint]
+select = [
+    "F",   # pyflakes (undefined names, unused imports, etc.)
+    "UP",  # pyupgrade
+]
+ignore = []
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "lf"

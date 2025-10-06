@@ -1,12 +1,11 @@
 import os
 import smtplib
-from typing import Dict
 from email.mime.text import MIMEText
 
 from agents import Agent, function_tool
 
 
-def _send_email_impl(subject: str, html_body: str) -> Dict[str, str]:
+def _send_email_impl(subject: str, html_body: str) -> dict[str, str]:
     """Pure implementation used by tests and the tool wrapper."""
     from_email = os.environ.get("FROM_EMAIL", "noreply@example.com")
     to_email = os.environ.get("TO_EMAIL", "recipient@example.com")
@@ -79,16 +78,18 @@ def _send_email_impl(subject: str, html_body: str) -> Dict[str, str]:
 
 
 @function_tool
-def send_email(subject: str, html_body: str) -> Dict[str, str]:
+def send_email(subject: str, html_body: str) -> dict[str, str]:
     """
     Tool entrypoint. Delegates to the pure implementation for testability.
     """
     return _send_email_impl(subject, html_body)
 
 
-INSTRUCTIONS = """You are able to send a nicely formatted HTML email based on a detailed report.
-You will be provided with a detailed report. You should use your tool to send one email, providing the 
-report converted into clean, well presented HTML with an appropriate subject line."""
+INSTRUCTIONS = (
+    "You are able to send a nicely formatted HTML email based on a detailed report. "
+    "You will be provided with a detailed report. You should use your tool to send one email, "
+    "providing the report converted into clean, well presented HTML with an appropriate subject line."
+)
 
 email_agent = Agent(
     name="Email agent",
